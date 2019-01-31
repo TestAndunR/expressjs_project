@@ -1,0 +1,146 @@
+{
+  "EDITOR_STATE": {
+    "allProjectFiles": {
+      "e042945e-6e83-4ede-83b4-79612124b11a": {
+        "id": "e042945e-6e83-4ede-83b4-79612124b11a",
+        "parent": null,
+        "name": "expressjs_project",
+        "type": "DIRECTORY",
+        "isDirectory": true,
+        "children": [
+          "13b0855f-bc4d-497a-9200-3b40cdbfe6e0"
+        ],
+        "isRemovable": false,
+        "filePath": "expressjs_project"
+      },
+      "13b0855f-bc4d-497a-9200-3b40cdbfe6e0": {
+        "id": "13b0855f-bc4d-497a-9200-3b40cdbfe6e0",
+        "parent": "e042945e-6e83-4ede-83b4-79612124b11a",
+        "name": "lambda.js",
+        "type": "LAMBDA_FILE",
+        "isDirectory": false,
+        "children": [],
+        "isRemovable": true,
+        "filePath": "expressjs_project/lambda.js",
+        "code": "let AWS = require('aws-sdk');\nconst serverless = require('serverless-http');\nconst bodyParser = require('body-parser');\nconst express = require('express')\nconst app = express();\nconst dynamoDb = new AWS.DynamoDB.DocumentClient();\n\nexports.handler = function (event, context, callback) {\n    app.post('/users', function (req, res) {\n        const { userId, name, phone_no } = req.body;\n        if (typeof userId !== 'string') {\n            res.status(400).json({ error: '\"userId\" must be a string' });\n        } else if (typeof name !== 'string') {\n            res.status(400).json({ error: '\"name\" must be a string' });\n        };\n        \n        dynamoDb.put({\n            TableName: 'users-dbtable-dev',\n            Item: { 'userId': userId, 'name': name }\n        }).promise().then(function (data) {\n            //your logic goes here\n            res.json({ \"message\": \"success\"});\n        }).catch(function (err) {\n            res.status(404).json({ error: \"User not found\" });\n            //handle error\n        });\n    })\n    callback(null, { \"message\": \"Successfully executed\" });\n}",
+        "triggers": [
+          {
+            "resourceName": "apigusEast1devMyExpressApplicationproxypost",
+            "config": {}
+          }
+        ],
+        "config": {
+          "runtime": "nodejs8.10",
+          "timeout": 60,
+          "memory": 128
+        }
+      }
+    },
+    "deletedFiles": [],
+    "rootNode": "e042945e-6e83-4ede-83b4-79612124b11a",
+    "openFiles": [
+      "13b0855f-bc4d-497a-9200-3b40cdbfe6e0"
+    ],
+    "currentFileId": "13b0855f-bc4d-497a-9200-3b40cdbfe6e0",
+    "resources": {
+      "apigusEast1devMyExpressApplicationproxypost": {
+        "name": "apigusEast1devMyExpressApplicationproxypost",
+        "type": "API_GATEWAY",
+        "config": {
+          "selectedRegion": "us-east-1",
+          "apiMode": 1,
+          "apiName": "dev-my-express-application",
+          "apiId": "nnzjntixo4",
+          "endpointType": "EDGE",
+          "rootResourceId": "vum36pkipj",
+          "existingResources": {
+            "/": "vum36pkipj",
+            "/{proxy+}": "xdhb8j"
+          },
+          "resourceMode": 1,
+          "resourcePath": "/{proxy+}",
+          "resourceName": "{proxy+}",
+          "resourceId": "xdhb8j",
+          "restMethod": "POST",
+          "proxyIntegration": true,
+          "enableCORS": false,
+          "stageMode": 1,
+          "stageName": "dev",
+          "stageDeploymentId": "ua6idt"
+        },
+        "globallyEditable": false
+      },
+      "ddbusersDbtableDev": {
+        "name": "ddbusersDbtableDev",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 1,
+          "operation": "put",
+          "table": {
+            "arn": "arn:aws:dynamodb:us-east-1:318300609668:table/users-dbtable-dev",
+            "name": "users-dbtable-dev",
+            "partitionKey": "userId",
+            "partitionKeyType": "S",
+            "hasSortKey": false,
+            "sortKey": "",
+            "sortKeyType": "S",
+            "mode": 1
+          },
+          "parameters": {
+            "Key": {},
+            "Item": {
+              "userId": "@{userId}",
+              "name": "@{name}"
+            },
+            "ExpressionAttributeValues": {}
+          },
+          "validator": {
+            "validatableFields": {},
+            "validity": true
+          },
+          "valid": true
+        },
+        "globallyEditable": false
+      }
+    },
+    "envVariables": [
+      {
+        "lambdaId": "all",
+        "varKey": "SIGMA_AWS_ACC_ID",
+        "varValue": null,
+        "shouldPersist": false,
+        "displayOnly": false,
+        "editable": false
+      }
+    ],
+    "packageJSON": {
+      "dependencies": {
+        "express": {
+          "name": "express",
+          "version": "4.16.4"
+        },
+        "serverless-http": {
+          "name": "serverless-http",
+          "version": "1.9.0"
+        }
+      }
+    },
+    "lambdaId": "13b0855f-bc4d-497a-9200-3b40cdbfe6e0"
+  },
+  "PROJECT_META": {
+    "projectName": "expressjs_project",
+    "projectDescription": "",
+    "projectVersion": "1.0.0",
+    "projectRegion": "us-east-1",
+    "platform": "AWS",
+    "platformRegions": {},
+    "lastSave": 1548934476954
+  },
+  "VCS_STATE": {
+    "provider": "GitHub",
+    "repo": {
+      "name": "expressjs_project",
+      "url": "https://github.com/TestAndunR/expressjs_project"
+    }
+  }
+}
