@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "expressjs_project/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nconst serverless = require('serverless-http');\nconst bodyParser = require('body-parser');\nconst express = require('express')\nconst app = express();\nconst dynamoDb = new AWS.DynamoDB.DocumentClient();\n\nexports.handler = function (event, context, callback) {\n    app.post('/users', function (req, res) {\n        const { userId, name, phone_no } = req.body;\n        if (typeof userId !== 'string') {\n            res.status(400).json({ error: '\"userId\" must be a string' });\n        } else if (typeof name !== 'string') {\n            res.status(400).json({ error: '\"name\" must be a string' });\n        };\n        \n        dynamoDb.put({\n            TableName: 'users-dbtable-dev',\n            Item: { 'userId': userId, 'name': name }\n        }).promise().then(function (data) {\n            //your logic goes here\n            res.json({ \"message\": \"success\"});\n        }).catch(function (err) {\n            res.status(404).json({ error: \"User not found\" });\n            //handle error\n        });\n    })\n    callback(null, { \"message\": \"Successfully executed\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nconst serverless = require('serverless-http');\nconst bodyParser = require('body-parser');\nconst express = require('express')\nconst app = express();\nconst dynamoDb = new AWS.DynamoDB.DocumentClient();\n\nexports.handler = function (event, context, callback) {\n    app.use(bodyParser.json({ strict: false }));\n    app.post('/users', function (req, res) {\n        const { userId, name} = req.body;\n        if (typeof userId !== 'string') {\n            res.status(400).json({ error: '\"userId\" must be a string' });\n        } else if (typeof name !== 'string') {\n            res.status(400).json({ error: '\"name\" must be a string' });\n        };\n        \n        dynamoDb.put({\n            TableName: 'users-dbtable-dev',\n            Item: { 'userId': userId, 'name': name }\n        }).promise().then(function (data) {\n            conso\n            //your logic goes here\n            res.json({ \"message\": \"success\"});\n        }).catch(function (err) {\n            res.status(404).json({ error: \"User not found\" });\n            //handle error\n        });\n    })\n    callback(null, { \"message\": \"Successfully executed\" });\n}",
         "triggers": [
           {
             "resourceName": "apigusEast1devMyExpressApplicationproxypost",
@@ -33,6 +33,14 @@
           "runtime": "nodejs8.10",
           "timeout": 60,
           "memory": 128
+        },
+        "testCases": {
+          "01279fd7-468a-40ca-9c1f-440cea6e0332": {
+            "id": "01279fd7-468a-40ca-9c1f-440cea6e0332",
+            "name": "Unnamed event",
+            "functionId": "13b0855f-bc4d-497a-9200-3b40cdbfe6e0",
+            "event": "{\n    \"userId\":\"ara\",\n    \"name\": \"arakann\"\n}"
+          }
         }
       }
     },
@@ -122,6 +130,10 @@
         "serverless-http": {
           "name": "serverless-http",
           "version": "1.9.0"
+        },
+        "body-parser": {
+          "name": "body-parser",
+          "version": "1.18.3"
         }
       }
     },
@@ -134,7 +146,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1548934476954
+    "lastSave": 1548995711914
   },
   "VCS_STATE": {
     "provider": "GitHub",
